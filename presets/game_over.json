@@ -1,0 +1,17 @@
+{
+  "_description": "ゲームオーバー。ぼかしから重く浮かび、そのまま残る（1回再生）",
+  "text": "GAME OVER",
+  "font": {"family": "mincho", "weight": "black", "size": 130, "letter_spacing": 0.12},
+  "style": {
+    "fill": {"type": "gradient", "colors": ["#ff8a80", "#b00020", "#4a0010"]},
+    "strokes": [{"width": 0.06, "color": "#000000"}],
+    "shadow": {"dx": 0.0, "dy": 0.08, "blur": 0.08, "color": "#000000", "opacity": 0.8}
+  },
+  "anim": {
+    "start_delay": 0.2,
+    "in": {"fx": "blurIn", "dur": 1.0, "stagger": 0.12},
+    "hold": {"fx": "none", "dur": 0.5},
+    "out": {"fx": "none"}
+  },
+  "export": {"fps": 24, "loop": 1}
+}

@@ -1,0 +1,18 @@
+{
+  "_description": "会話ウィンドウの文字送り。箱の中に1文字ずつ表示され、消えない",
+  "text": "ようこそ、冒険者よ。\nこの先は魔物の森だ。気をつけて進むがよい。",
+  "canvas": {"width": 960, "height": 260},
+  "font": {"family": "gothic", "weight": "medium", "size": 40, "letter_spacing": 0.02, "line_height": 1.6},
+  "layout": {"align": "left", "anchor": "top", "margin": 48, "auto_fit": false, "wrap_width": 860},
+  "style": {
+    "fill": {"type": "solid", "color": "#ffffff"},
+    "strokes": [{"width": 0.1, "color": "#000000"}]
+  },
+  "deco": {"type": "box", "color": "#0b1640", "opacity": 0.85, "pad": 0.5, "radius": 0.3, "dur": 0.2},
+  "anim": {
+    "in": {"fx": "typewriter", "stagger": 0.06},
+    "hold": {"fx": "none", "dur": 1.0},
+    "out": {"fx": "none"}
+  },
+  "export": {"fps": 30, "loop": 1, "trim": false}
+}

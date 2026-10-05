@@ -1,0 +1,15 @@
+{
+  "_description": "ステージクリア。中央から順にポップし、表示中は鼓動する",
+  "text": "STAGE CLEAR",
+  "font": {"family": "gothic", "weight": "black", "size": 110, "letter_spacing": 0.05},
+  "style": {
+    "fill": {"type": "gradient", "colors": ["#ffffff", "#7fe3ff", "#2f7bff"]},
+    "strokes": [{"width": 0.12, "color": "#001a4d"}, {"width": 0.05, "color": "#ffffff"}]
+  },
+  "anim": {
+    "in": {"fx": "pop", "dur": 0.4, "stagger": 0.05, "order": "center"},
+    "hold": {"fx": "pulse", "dur": 2.0, "period": 1.0},
+    "out": {"fx": "growOut", "dur": 0.35, "stagger": 0.0}
+  },
+  "export": {"fps": 30, "loop": 0}
+}

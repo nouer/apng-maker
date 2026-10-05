@@ -1,0 +1,20 @@
+{
+  "_description": "場所・時間のテロップ。下線が伸び、サブテキストと本文が順に浮かぶ",
+  "text": "森の入口",
+  "sub": {"text": "STAGE 1", "position": "above", "size": 0.36, "letter_spacing": 0.4,
+          "fill": {"type": "solid", "color": "#d7ecff"}},
+  "font": {"family": "mincho", "weight": "bold", "size": 96, "letter_spacing": 0.12},
+  "layout": {"align": "left", "anchor": "bottom", "margin": 60},
+  "style": {
+    "fill": {"type": "solid", "color": "#ffffff"},
+    "strokes": [{"width": 0.05, "color": "#000000"}],
+    "shadow": {"dx": 0.03, "dy": 0.04, "blur": 0.05, "color": "#000000", "opacity": 0.7}
+  },
+  "deco": {"type": "underline", "color": "#ffffff", "opacity": 0.9, "pad": 0.25, "thickness": 0.03, "dur": 0.5},
+  "anim": {
+    "in": {"fx": "rise", "dur": 0.5, "stagger": 0.06},
+    "hold": {"fx": "none", "dur": 1.8},
+    "out": {"fx": "fade", "dur": 0.5, "stagger": 0.0}
+  },
+  "export": {"fps": 24, "loop": 1}
+}

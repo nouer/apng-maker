@@ -1,0 +1,18 @@
+{
+  "_description": "戦闘開始のカットイン。帯が開き、文字が叩きつけられて画面が揺れる",
+  "text": "戦闘開始",
+  "font": {"family": "gothic", "weight": "black", "size": 150, "letter_spacing": 0.08},
+  "style": {
+    "fill": {"type": "gradient", "colors": ["#ffffff", "#ffd54a", "#ff7a00"]},
+    "strokes": [{"width": 0.14, "color": "#3a0000"}, {"width": 0.07, "color": "#ffffff"}],
+    "shadow": {"dx": 0.05, "dy": 0.07, "blur": 0.03, "color": "#000000", "opacity": 0.6}
+  },
+  "deco": {"type": "band", "color": "#000000", "opacity": 0.65, "pad": 0.35, "dur": 0.25},
+  "anim": {
+    "in": {"fx": "slam", "dur": 0.22, "stagger": 0.07},
+    "hold": {"fx": "none", "dur": 0.9},
+    "out": {"fx": "slide", "dur": 0.25, "stagger": 0.02, "dir": "right"},
+    "camera_shake": {"at": "in_end", "dur": 0.3, "amp": 0.06}
+  },
+  "export": {"fps": 30, "loop": 1}
+}

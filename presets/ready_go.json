@@ -1,0 +1,16 @@
+{
+  "_description": "READY? → 対戦前の掛け声。スライドで入り、ズームで抜ける短いカットイン",
+  "text": "READY?",
+  "font": {"family": "gothic", "weight": "black", "size": 140, "letter_spacing": 0.03},
+  "style": {
+    "fill": {"type": "solid", "color": "#ffffff"},
+    "strokes": [{"width": 0.12, "color": "#0047ff"}],
+    "shadow": {"dx": 0.06, "dy": 0.06, "blur": 0.0, "color": "#001040", "opacity": 0.9}
+  },
+  "anim": {
+    "in": {"fx": "slide", "dur": 0.3, "stagger": 0.03, "dir": "left"},
+    "hold": {"fx": "shake", "dur": 0.6, "amp": 0.6},
+    "out": {"fx": "zoomThrough", "dur": 0.3, "stagger": 0.0}
+  },
+  "export": {"fps": 30, "loop": 1}
+}

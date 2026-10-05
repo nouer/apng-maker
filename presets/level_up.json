@@ -1,0 +1,16 @@
+{
+  "_description": "レベルアップ。文字が跳ねて現れ、表示中は波打ちながら光る（表示中の区間はループ可）",
+  "text": "LEVEL UP!",
+  "font": {"family": "gothic", "weight": "black", "size": 120, "letter_spacing": 0.04},
+  "style": {
+    "fill": {"type": "gradient", "colors": ["#fffbd0", "#ffd000", "#ff9f00"]},
+    "strokes": [{"width": 0.12, "color": "#5a2d00"}],
+    "glow": {"radius": 0.18, "color": "#fff176", "opacity": 0.9}
+  },
+  "anim": {
+    "in": {"fx": "bounce", "dur": 0.6, "stagger": 0.05},
+    "hold": {"fx": "wave", "dur": 2.0, "period": 1.0},
+    "out": {"fx": "rise", "dur": 0.35, "stagger": 0.03}
+  },
+  "export": {"fps": 30, "loop": 0}
+}

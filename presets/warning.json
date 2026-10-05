@@ -1,0 +1,18 @@
+{
+  "_description": "ボス接近の警告。上下線が伸び、グリッチで現れて点滅する（表示中の区間はループ可）",
+  "text": "WARNING",
+  "sub": {"text": "強大な敵が接近中", "position": "below", "size": 0.3, "letter_spacing": 0.3},
+  "font": {"family": "gothic", "weight": "black", "size": 130, "letter_spacing": 0.15},
+  "style": {
+    "fill": {"type": "solid", "color": "#ff2a2a"},
+    "strokes": [{"width": 0.06, "color": "#2a0000"}],
+    "glow": {"radius": 0.2, "color": "#ff0000", "opacity": 0.8}
+  },
+  "deco": {"type": "lines", "color": "#ff2a2a", "opacity": 0.9, "pad": 0.25, "thickness": 0.04, "dur": 0.35},
+  "anim": {
+    "in": {"fx": "glitch", "dur": 0.4, "stagger": 0.04, "order": "random"},
+    "hold": {"fx": "blink", "dur": 2.0, "period": 0.5},
+    "out": {"fx": "glitch", "dur": 0.3, "stagger": 0.02, "order": "random"}
+  },
+  "export": {"fps": 30, "loop": 0}
+}

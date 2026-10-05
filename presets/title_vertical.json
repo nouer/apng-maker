@@ -1,0 +1,18 @@
+{
+  "_description": "和風タイトル（縦書き・明朝）。1文字ずつ明滅して現れ、そのまま残る",
+  "text": "百鬼夜行",
+  "writing": "vertical",
+  "canvas": {"width": 400, "height": 720},
+  "font": {"family": "mincho", "weight": "black", "size": 130, "letter_spacing": 0.1},
+  "style": {
+    "fill": {"type": "gradient", "colors": ["#fff6e0", "#e8c27a"]},
+    "strokes": [{"width": 0.05, "color": "#1a0f00"}],
+    "glow": {"radius": 0.2, "color": "#ff6a00", "opacity": 0.6}
+  },
+  "anim": {
+    "in": {"fx": "flicker", "dur": 0.6, "stagger": 0.25},
+    "hold": {"fx": "glow", "dur": 2.0, "period": 2.0},
+    "out": {"fx": "none"}
+  },
+  "export": {"fps": 24, "loop": 1}
+}
