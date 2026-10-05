@@ -67,7 +67,8 @@ def build(scene, layout):
     text_start = t0 + lead
 
     glyphs = layout.glyphs
-    n_seq = sum(1 for g in glyphs if not g.blank)
+    # ルビは親字の順位を借りるので数えない。0 文字（空白だけ）でも添字が壊れないよう 1 以上にする
+    n_seq = max(1, sum(1 for g in glyphs if not g.blank and not g.aux))
     in_fx, out_fx = a_in["fx"], a_out["fx"]
     in_dur = max(0.0, a_in.get("dur", effects.IN_FX[in_fx][0]))
     out_dur = max(0.0, a_out.get("dur", effects.OUT_FX[out_fx][0]))

@@ -12,7 +12,7 @@ from bisect import bisect_left
 
 from PIL import Image, ImageDraw
 
-PALETTE_PIXEL_LIMIT = 40_000_000  # 全フレームを縦に並べて減色するときの上限
+PALETTE_PIXEL_LIMIT = 40_000_000  # これを超えると、全フレームを並べず見本から減色する
 
 
 def frame_schedule(duration, fps):
@@ -99,11 +99,14 @@ def trim(frames, pad=0, extra=()):
     return [f.crop(box) for f in frames], box
 
 
-def quantize_shared(frames, colors=256):
-    """全フレームで共有するパレットへ減色する。大きすぎるときは None。"""
+def quantize_shared(frames, colors=256, limit=PALETTE_PIXEL_LIMIT):
+    """全フレームで共有するパレットへ減色する。
+    画素数が limit 以下なら全フレームを1枚に並べて減色する（いちばんきれい）。
+    超えるときは、見本からパレットを作って1枚ずつ当てはめる（メモリが増えない。palette.py）。"""
     w, h = frames[0].size
-    if w * h * len(frames) > PALETTE_PIXEL_LIMIT:
-        return None
+    if w * h * len(frames) > limit:
+        from . import palette
+        return palette.quantize(frames, colors)
     strip = Image.new("RGBA", (w, h * len(frames)))
     for i, f in enumerate(frames):
         strip.paste(f, (0, h * i))
@@ -114,8 +117,8 @@ def quantize_shared(frames, colors=256):
 def save_apng(frames, path, durations, loop=0, poster=None, palette=False):
     """APNG を保存する。poster を渡すと、APNG 非対応の環境で表示される静止画になる。
     loop: 0 = 無限、n = n 回。
-    戻り値は (モード 'RGBA'/'P', 書き込んだフレームを RGBA にしたもの)。256色化したときは
-    減色後の絵になるので、プレビューやシートはこちらを使う。"""
+    戻り値は (モード 'RGBA'/'P', 書き込んだフレーム)。256色化したときは減色後の P 画像なので、
+    プレビューはこちらを使う（全部を RGBA に戻すとメモリが倍になるので、戻すのは使う側）。"""
     images = list(frames) if poster is None else [poster] + list(frames)
     mode = "RGBA"
     if palette:
@@ -133,8 +136,7 @@ def save_apng(frames, path, durations, loop=0, poster=None, palette=False):
     else:
         first.save(path, format="PNG", **kwargs)
     start = 0 if poster is None else 1
-    written = [im.convert("RGBA") for im in images[start:]] if mode == "P" else list(frames)
-    return mode, written
+    return mode, images[start:]
 
 
 def save_sequence(frames, out_dir, stem):
@@ -196,7 +198,7 @@ def contact_sheet(frames, times, path, picks=12, cell_w=320):
         x = 4 + (j % cols) * (tw + 4)
         y = 4 + (j // cols) * (th + label_h + 4)
         cell = _checker((tw, th))
-        cell.alpha_composite(frames[i].resize((tw, th), Image.LANCZOS))
+        cell.alpha_composite(frames[i].convert("RGBA").resize((tw, th), Image.LANCZOS))
         sheet.paste(cell, (x, y + label_h))
         d.text((x, y + 2), f"#{i}  t={times[i]:.2f}s", fill=(0, 0, 0, 255))
     sheet.convert("RGB").save(path)

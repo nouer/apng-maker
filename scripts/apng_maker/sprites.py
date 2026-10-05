@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 from . import fonts
+from .textshape import HAS_RAQM
 from .util import rgba
 
 
@@ -55,11 +56,25 @@ def _gradient(fill, w, h, top, bottom):
     return strip.resize((w, h), Image.NEAREST)
 
 
-def _text_mask(size, font, xy, ch, stroke=0):
+def _text_mask(size, font, xy, ch, stroke=0, feats=()):
     mask = Image.new("L", size, 0)
+    kw = {"features": list(feats)} if feats and HAS_RAQM else {}
     ImageDraw.Draw(mask).text(xy, ch, font=font, fill=255, anchor="ms",
-                              stroke_width=int(round(stroke)), stroke_fill=255)
+                              stroke_width=int(round(stroke)), stroke_fill=255, **kw)
     return mask
+
+
+def _em_center(font):
+    """ベースラインから見た、字面（全角の枠）の中心の高さ（上が負）。
+    「口」の外形から求める。縦書き用字形はこの枠を基準に作られているので、ここを中心に描く。"""
+    try:
+        _, top, _, bottom = font.getbbox("口", anchor="ls")
+        if bottom > top:
+            return (top + bottom) / 2
+    except (OSError, ValueError):
+        pass
+    asc, desc = font.getmetrics()
+    return -(asc - desc) / 2
 
 
 def _close_holes(mask, gap):
@@ -89,14 +104,17 @@ def build(glyph, scene):
     if glyph.group == 1 and scene["sub"].get("weight"):
         weight = scene["sub"]["weight"]
     font = fonts.load(scene["font"]["family"], weight, S)
+    feats = glyph.feats if HAS_RAQM else ()
     pad = _pad(style, S)
-    half_w = int(max(glyph.adv, S) / 2 + pad)
+    # 横に描いたときの文字の幅（縦書きの v は全角、縦中横はつないだ文字列の幅）
+    width = font.getlength(glyph.ch) if glyph.kind in ("side", "tcy") else (
+        S if glyph.kind == "v" else glyph.adv)
+    half_w = int(max(width, S) / 2 + pad)
     half_h = int(S / 2 + pad)
     if glyph.rot:
         half_w, half_h = max(half_w, half_h), max(half_w, half_h)
     size = (half_w * 2, half_h * 2)
-    asc, desc = font.getmetrics()
-    xy = (half_w, half_h + (asc - desc) / 2)
+    xy = (half_w, half_h - _em_center(font))
 
     body = Image.new("RGBA", size, (0, 0, 0, 0))
     # 縁取りは太い順に重ねる（外側の縁 → 内側の縁 → 塗り）
@@ -104,12 +122,12 @@ def build(glyph, scene):
     for st in sorted(style.get("strokes") or [], key=lambda s: -s["width"]):
         w = st["width"] * S
         if w > 0:
-            mask = _text_mask(size, font, xy, glyph.ch, w)
+            mask = _text_mask(size, font, xy, glyph.ch, w, feats)
             if prev_w is not None:
                 mask = _close_holes(mask, prev_w - w)
             body.alpha_composite(_colored(mask, st["color"]))
             prev_w = w
-    fill_mask = _text_mask(size, font, xy, glyph.ch)
+    fill_mask = _text_mask(size, font, xy, glyph.ch, 0, feats)
     fill = style["fill"]
     if fill.get("type") == "gradient":
         top, bottom = half_h - S / 2, half_h + S / 2
@@ -140,14 +158,24 @@ def build(glyph, scene):
     if glyph.rot:
         body = body.rotate(-90)
         glow = glow.rotate(-90) if glow else None
+    if glyph.kind == "tcy" and width > S * 0.95:   # 縦中横は1文字の枠に収まるよう横を縮める
+        k = S * 0.95 / width
+        body = _squeeze(body, k)
+        glow = _squeeze(glow, k) if glow else None
     return Sprite(body=body, glow=glow)
+
+
+def _squeeze(img, k):
+    w, h = img.size
+    nw = max(2, int(w * k) // 2 * 2)
+    return img.resize((nw, h), Image.LANCZOS)
 
 
 def build_all(layout, scene):
     """同じ文字・同じ組・同じ向きのスプライトは使い回す。"""
     cache, out = {}, []
     for g in layout.glyphs:
-        key = (g.ch, g.group, g.rot, round(g.size, 2))
+        key = (g.ch, g.group, g.rot, round(g.size, 2), g.kind, g.feats)
         if key not in cache:
             cache[key] = build(g, scene)
         out.append(cache[key])

@@ -271,7 +271,7 @@ class Test11PalettePreview(Tmp):
         self.assertEqual(mode, "P")
         back, _, _ = encode.split_apng(path)
         for a, b in zip(written, back):
-            self.assertTrue(same(a, b))
+            self.assertTrue(same(a.convert("RGBA"), b))
 
 
 if __name__ == "__main__":

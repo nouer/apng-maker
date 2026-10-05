@@ -12,7 +12,8 @@ DEFAULTS = {
     "sub": None,
     "writing": "horizontal",
     "font": {"family": "gothic", "weight": "black", "size": 120,
-             "letter_spacing": 0.04, "line_height": 1.3},
+             "letter_spacing": 0.04, "line_height": 1.3, "kerning": True, "palt": False},
+    "ruby": {"size": 0.5, "gap": 0.05},
     "layout": {"align": "center", "anchor": "center", "margin": 40,
                "offset": [0, 0], "auto_fit": True, "wrap_width": None},
     "style": {

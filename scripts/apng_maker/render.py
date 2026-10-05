@@ -40,6 +40,8 @@ class Renderer:
 
     def glyph_state(self, g, t):
         """時刻 t の文字 g の状態。見えないときは None。"""
+        if g.aux:   # ルビは親字と同じ動きをする（大きさに比例させると、移動量が親字の半分になり離れる）
+            return self.glyph_state(g.base, t)
         tl, anim = self.timeline, self.scene["anim"]
         i = g.index
         if t < tl.in_start[i]:
